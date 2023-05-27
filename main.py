@@ -17,11 +17,6 @@ app = Client("bot", api_id=6,
 async def __start(_, m: Message):
     await m.reply_text("Hi, send me a bunnyvideo link to download it!", quote=True)
 
-
-async def callback(current, total, msg_id: Message):
-    await msg_id.edit_text(f"Uploading... {current * 100 / total:.1f}%")
-
-
 def get_video_info(file_path):
     cap = cv2.VideoCapture(file_path)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -78,7 +73,7 @@ async def __download(_, m: Message):
     width, height, duration, ss_path = get_video_info(v_path)
 
     await msg.edit_text("Uploading...")
-    await m.reply_video(v_path, quote=True, progress=callback, progress_args=(msg,), width=width, height=height, duration=duration, thumb=ss_path, caption=caption)
+    await m.reply_video(v_path, quote=True, width=width, height=height, duration=duration, thumb=ss_path, caption=caption)
 
     await msg.delete()
 
