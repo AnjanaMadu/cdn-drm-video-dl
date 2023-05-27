@@ -51,34 +51,37 @@ def get_video_info(file_path):
 
 @app.on_message(filters.text)
 async def __download(_, m: Message):
-    msg = await m.reply_text("Downloading...", quote=True)
+    try:
+        msg = await m.reply_text("Downloading...", quote=True)
 
-    url = m.text.split("\n\n")[0]
-    caption = m.text.split("\n\n")[1]
+        url = m.text.split("\n\n")[0]
+        caption = m.text.split("\n\n")[1]
 
-    v_name = uuid.uuid4().hex
-    # v_name = "d253eff8dc2446e6b25e9e620bc3f973"
+        v_name = uuid.uuid4().hex
+        # v_name = "d253eff8dc2446e6b25e9e620bc3f973"
 
-    video = BunnyVideoDRM(
-        referer='https://iframe.mediadelivery.net/',
-        embed_url=url,
-        name=v_name,
-        path="./downloads/"
-    )
-    video.download()
+        video = BunnyVideoDRM(
+            referer='https://iframe.mediadelivery.net/',
+            embed_url=url,
+            name=v_name,
+            path="./downloads/"
+        )
+        video.download()
 
-    v_path = f"./downloads/{v_name}.mp4"
-    shutil.rmtree(f"./downloads/.{v_name}.mp4", ignore_errors=True)
+        v_path = f"./downloads/{v_name}.mp4"
+        shutil.rmtree(f"./downloads/.{v_name}.mp4", ignore_errors=True)
 
-    width, height, duration, ss_path = get_video_info(v_path)
+        width, height, duration, ss_path = get_video_info(v_path)
 
-    await msg.edit_text("Uploading...")
-    await m.reply_video(v_path, quote=True, width=width, height=height, duration=duration, thumb=ss_path, caption=caption)
+        await msg.edit_text("Uploading...")
+        await m.reply_video(v_path, quote=True, width=width, height=height, duration=duration, thumb=ss_path, caption=caption)
 
-    await msg.delete()
+        await msg.delete()
 
-    os.remove(v_path)
-    os.remove(ss_path)
+        os.remove(v_path)
+        os.remove(ss_path)
+    except Exception as e:
+        await m.reply_text(f"Error: {e}", quote=True)
 
 print("Bot started!")
 app.run()
