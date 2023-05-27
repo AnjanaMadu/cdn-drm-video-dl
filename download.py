@@ -172,17 +172,3 @@ class BunnyVideoDRM:
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download(url)
-
-
-if __name__ == '__main__':
-    video = BunnyVideoDRM(
-        # insert the referer between the quotes below (address of your webpage)
-        referer='',
-        # paste your embed link
-        embed_url='',
-        # you can override file name, no extension
-        name="",
-        # you can override download path
-        path=r"")
-    # video.session.close()
-    video.download()
